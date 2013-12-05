@@ -1,7 +1,9 @@
 backvent
 ========
 
-Backbone General Delegates (Model/Collection/View)
+# Backbone Declarative Listeners
+
+A simple declarative syntax for binding/unbinding listeners to View observables such as Model(s), Collection(s) and or Oneself(this).
 
 ```js
 var View = new BackVent.extend({
