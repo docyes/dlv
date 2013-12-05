@@ -1,4 +1,4 @@
-# Backbone Declarative Listener Views
+# Backbone Declarative Listener View
 
 A simple declarative syntax for binding/unbinding listeners to View observables such as Model(s), Collection(s) and/or Oneself(this).
 
