@@ -2,7 +2,7 @@
 
 A simple declarative syntax for binding/unbinding listeners to Backbone.View observables such as Model(s), Collection(s) and/or Oneself (this).
 
-## Basic Listener
+## Model Listener
 ```js
 var View = new DLV.extend({
     listeners: {
@@ -78,7 +78,7 @@ var view = new View();
 view.trigger('boo');
 ```
 
-## Listeners Function Support
+## Listeners As A Function
 ```js
 var View = new DLV.extend({
     listeners: function() {
@@ -95,7 +95,7 @@ var view = new View({model: model});
 model.set('foo', 'bar');
 ```
 
-## Listeners Constructor Support
+## Listeners As A Constructor Argument
 ```js
 var model = new Backbone.Model();
 var view = new DLV({
