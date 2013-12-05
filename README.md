@@ -64,7 +64,7 @@ var view = new View({model: model});
 model.set('foo', 'bar');
 ```
 
-### View Listeners
+## View Listeners
 ```js
 var View = new BackVent.extend({
     listeners: {
