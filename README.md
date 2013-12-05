@@ -1,6 +1,6 @@
-# Backbone Declarative Listener View (DLV) 
+# Declarative Listener View (DLV) 
 
-A simple declarative syntax for binding/unbinding listeners to View observables such as Model(s), Collection(s) and/or Oneself (this).
+A simple declarative syntax for binding/unbinding listeners to Backbone.View observables such as Model(s), Collection(s) and/or Oneself (this).
 
 ## Basic Listener
 ```js
