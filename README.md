@@ -17,19 +17,18 @@ var view = new View({model: model});
 model.set('foo', 'bar');
 ```
 
-## Multi-Event Listeners
+## View Listeners
 ```js
 var View = new DLV.extend({
     listeners: {
-        'change:foo change:bar model': function() {
-            alert('foo or bar changed');
+        'boo this': function() {
+            alert('Boo!');
         }
     }
 });
 
-var model = new Backbone.Model();
-var view = new View({model: model});
-model.set('foo', 'bar');
+var view = new View();
+view.trigger('boo');
 ```
 
 ## Disable Listeners
@@ -48,6 +47,21 @@ view.undelegateListeners();
 model.set('foo', 'bar');
 ```
 
+## Multi-Event Listeners
+```js
+var View = new DLV.extend({
+    listeners: {
+        'change:foo change:bar model': function() {
+            alert('foo or bar changed');
+        }
+    }
+});
+
+var model = new Backbone.Model();
+var view = new View({model: model});
+model.set('foo', 'bar');
+```
+
 ## Named Callback
 ```js
 var View = new DLV.extend({
@@ -62,20 +76,6 @@ var View = new DLV.extend({
 var model = new Backbone.Model();
 var view = new View({model: model});
 model.set('foo', 'bar');
-```
-
-## View Listeners
-```js
-var View = new DLV.extend({
-    listeners: {
-        'boo this': function() {
-            alert('Boo!');
-        }
-    }
-});
-
-var view = new View();
-view.trigger('boo');
 ```
 
 ## Listeners As A Function
