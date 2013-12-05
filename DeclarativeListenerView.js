@@ -1,4 +1,4 @@
-var BackVent = Backbone.View.extend({
+var DeclarativeListenerView = Backbone.View.extend({
     constructor: function(options) {
         options || (options = {});
         if (options.listeners) {
