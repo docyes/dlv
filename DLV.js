@@ -30,7 +30,7 @@ var DLV = Backbone.View.extend({
         }
     },
     undelegateListeners: function() {
-        for (var key in listeners) {
+        for (var key in this.listeners) {
             var match = key.match(/\S+/g);
             var other = match.pop();
             other = (other === 'this') ? this : this[other];
