@@ -16,4 +16,20 @@
             });
         strictEqual(dlv.listeners, listeners, 'constructor instance listeners');    
     });
+    test('single event listener', 1, function() {
+        var View = DLV.extend({
+            listeners: {
+                'change model': 'handler'
+            },
+            handler: function() {}
+        });
+        var model = new Backbone.Model();
+        var view = new View({
+            model: model
+        });
+        var spy = sinon.spy();
+        spy(view, 'handler');
+        model.set('foo', 'bar');
+        ok(spy.calledOnce, 'listener called');
+    });
 })();
