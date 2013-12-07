@@ -27,9 +27,25 @@
         var view = new View({
             model: model
         });
-        var spy = sinon.spy();
-        spy(view, 'handler');
+        var spy = sinon.spy(view.handler);
         model.set('foo', 'bar');
         ok(spy.calledOnce, 'listener called');
     });
+    test('single multi-event listener', 1, function() {
+        var View = DLV.extend({
+            listeners: {
+                'change:foo change:bar model': 'handler'
+            },
+            handler: function() {}
+        });
+        var model = new Backbone.Model();
+        var view = new View({
+            model: model
+        });
+        var spy = sinon.spy(view.handler);
+        model.set('foo', 'bar');
+        model.set('bar', 'foo');
+        ok(spy.calledTwice, 'listener called');
+    });
+   
 })();
