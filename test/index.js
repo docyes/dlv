@@ -53,7 +53,7 @@
                 'change:foo': 'fooHandler',
                 'change:bar': 'barHandler',
             },
-            fooHandler: function() {}
+            fooHandler: function() {},
             barHandler: function() {}
         });
         var model = new Backbone.Model();
