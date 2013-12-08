@@ -27,7 +27,7 @@
         var view = new View({
             model: model
         });
-        var spy = sinon.spy(view.handler);
+        var spy = sinon.spy(view, 'handler');
         model.set('foo', 'bar');
         ok(spy.calledOnce, 'listener called');
     });
@@ -42,7 +42,7 @@
         var view = new View({
             model: model
         });
-        var spy = sinon.spy(view.handler);
+        var spy = sinon.spy(view, 'handler');
         model.set('foo', 'bar');
         model.set('bar', 'foo');
         ok(spy.calledTwice, 'listener called');
@@ -60,8 +60,8 @@
         var view = new View({
             model: model
         });
-        var fooHandlerSpy = sinon.spy(view.fooHandler);
-        var barHandlerSpy = sinon.spy(view.barHandler);
+        var fooHandlerSpy = sinon.spy(view, 'fooHandler');
+        var barHandlerSpy = sinon.spy(view, 'barHandler');
         model.set('foo', 'bar');
         model.set('bar', 'foo');
         ok(fooHandlerSpy.calledOnce, 'foo listener called');
