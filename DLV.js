@@ -1,4 +1,3 @@
-var delegateListenerSplitter = /\S+/g;
 var DLV = Backbone.View.extend({
     constructor: function(options) {
         options || (options = {});
@@ -8,11 +7,10 @@ var DLV = Backbone.View.extend({
         Backbone.View.apply(this, arguments);
         this.delegateListeners();
     },
-    delegateListeners: function(listeners) {
+    _implementListeners: function(listeners, implementation) {
         if (!(listeners || (listeners = _.result(this, 'listeners')))) {
-            return this;
+            return;
         }
-        this.undelegateListeners();
         for (var key in listeners) {
             var method = listeners[key];
             if (!_.isFunction(method)) {
@@ -21,24 +19,22 @@ var DLV = Backbone.View.extend({
             if (!method) {
                 continue;
             }
-            var match = key.match(delegateListenerSplitter);
+            var match = key.match(/\S+/g);
             var other = match.pop();
             other = (other === 'this') ? this : this[other];
             if (!other) {
                 continue;
             }
-            this.listenTo(other, match.join(' '), method);
+            this[implementation](other, match.join(' '), method);
         }
     },
+    delegateListeners: function(listeners) {
+        this._implementListeners(listeners, 'stopListening');
+        this._implementListeners(listeners, 'listenTo');
+        return this;
+    },
     undelegateListeners: function() {
-        for (var key in this.listeners) {
-            var match = key.match(delegateListenerSplitter);
-            var other = match.pop();
-            other = (other === 'this') ? this : this[other];
-            if (!other) {
-                continue;
-            }
-            this.stopListening(other);
-        }
+        this._implementListeners(this.listeners, 'stopListening');
+        return this;
     }
 });
