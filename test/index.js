@@ -111,7 +111,7 @@
     test('undelegate listener', 1, function() {
          var View = DLV.extend({
             listeners: {
-                'bar this': 'handler'
+                'change:bar model': 'handler'
             },
             handler: sinon.spy()
         });
@@ -120,13 +120,13 @@
             model: model
         });
         view.undelegateListeners();
-        model.set('foo', 'bar');
+        model.set('bar', 'foo');
         ok(!view.handler.called, 'listener not called');
     });
     test('undelegate anonymous listener', 1, function() {
          var View = DLV.extend({
             listeners: {
-                'bar this': function() {
+                'change:bar model': function() {
                     this.handler();        
                 }
             },
@@ -137,10 +137,70 @@
             model: model
         });
         view.undelegateListeners();
-        model.set('foo', 'bar');
+        model.set('bar', 'foo');
         ok(!view.handler.called, 'listener not called');
     });
-
-
-
+    test('delegate custom listeners', 1, function() {
+        var View = DLV.extend({
+            handler: sinon.spy()
+        });
+        var model = new Backbone.Model();
+        var view = new View({
+            model: model
+        });
+        var listeners = {
+            'change:bar model': function() {
+                this.handler();        
+            }
+        };
+        view.delegateListeners(listeners);
+        model.set('bar', 'foo');
+        ok(view.handler.called, 'listener called');
+    });
+    test('undelegate custom listeners', 1, function() {
+        var View = DLV.extend({
+            handler: sinon.spy()
+        });
+        var model = new Backbone.Model();
+        var view = new View({
+            model: model
+        });
+        var listeners = {
+            'change:bar model': function() {
+                this.handler();        
+            }
+        };
+        view.delegateListeners(listeners);
+        view.undelegateListeners(listeners);
+        model.set('bar', 'foo');
+        ok(!view.handler.called, 'listener called');
+    });
+    test('undelegate custom listeners does not clobber pre-existing', 1, function() {
+        var View = DLV.extend({
+            listeners: {
+                'change:foo model': 'fooHandler'
+            },
+            fooHandler: sinon.spy(),
+            barHandler: sinon.spy()
+        });
+        var model = new Backbone.Model();
+        var view = new View({
+            model: model
+        });
+        var listeners = {
+            'change:bar model': function() {}
+        };
+        view.delegateListeners(listeners);
+        view.undelegateListeners(listeners);
+        model.set('foo', 'bar');
+        ok(view.fooHandler.called, 'listener called');
+    });
+    test('delegate listeners returns instance', 1, function() {
+        var view = new DLV();
+        ok(view.delegateListeners().cid, 'returned instance');
+    });
+    test('undelegate listeners returns instance', 1, function() {
+        var view = new DLV();
+        ok(view.undelegateListeners().cid, 'returned instance');
+    });
 })();
