@@ -33,8 +33,8 @@ var DLV = Backbone.View.extend({
         this._implementListeners(listeners, 'listenTo');
         return this;
     },
-    undelegateListeners: function() {
-        this._implementListeners(this.listeners, 'stopListening');
+    undelegateListeners: function(listeners) {
+        this._implementListeners(listeners, 'stopListening');
         return this;
     }
 });
