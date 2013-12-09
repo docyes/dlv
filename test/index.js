@@ -63,4 +63,20 @@
         ok(view.fooHandler.calledOnce, 'foo listener called');
         ok(view.barHandler.calledOnce, 'bar listener called');
     });
+    test('anonymous event listener', 1, function() {
+        var View = DLV.extend({
+            listeners: {
+                'change model': function() {
+                    this.handler();
+                }
+            },
+            handler: sinon.spy()
+        });
+        var model = new Backbone.Model();
+        var view = new View({
+            model: model
+        });
+        model.set('foo', 'bar');
+        ok(view.handler.calledOnce, 'listener called');
+    });
 })();
