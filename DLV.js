@@ -1,3 +1,4 @@
+var delegateListenerSplitter = /\S+/g;
 var DLV = Backbone.View.extend({
     constructor: function(options) {
         options || (options = {});
@@ -20,7 +21,7 @@ var DLV = Backbone.View.extend({
             if (!method) {
                 continue;
             }
-            var match = key.match(/\S+/g);
+            var match = key.match(delegateListenerSplitter);
             var other = match.pop();
             other = (other === 'this') ? this : this[other];
             if (!other) {
@@ -31,7 +32,7 @@ var DLV = Backbone.View.extend({
     },
     undelegateListeners: function() {
         for (var key in this.listeners) {
-            var match = key.match(/\S+/g);
+            var match = key.match(delegateListenerSplitter);
             var other = match.pop();
             other = (other === 'this') ? this : this[other];
             if (!other) {
