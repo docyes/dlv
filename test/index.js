@@ -97,4 +97,16 @@
         model.set('foo', 'bar');
         ok(view.handler.calledOnce, 'listener called');
     });
+    test('local context event listener entry', 1, function() {
+        var View = DLV.extend({
+            listeners: {
+                'bar this': 'handler'
+            },
+            handler: sinon.spy()
+        });
+        var view = new View();
+        view.trigger('bar');
+        ok(view.handler.calledOnce, 'listener called');
+    });
+
 })();
