@@ -108,3 +108,38 @@ var view = new DLV({
 });
 model.set('foo', 'bar');
 ```
+
+## Add Delegate Listeners By Reference
+```js
+var model = new Backbone.Model();
+var view = new DLV({
+   model: model
+});
+var listeners = {
+    'change:foo model': function() {
+        alert(this.model.get('foo'));
+    }
+}
+view.delegateListeners(listeners);
+model.set('foo', 'bar');
+```
+
+## Remove Delegate Listeners By Reference
+```js
+var model = new Backbone.Model();
+var view = new DLV({
+   model: model
+});
+var listeners = {
+    'change:foo model': function() {
+        alert(this.model.get('foo'));
+    }
+}
+view.delegateListeners(listeners);
+view.undelegateListeners(listeners);
+model.set('foo', 'bar');
+```
+
+
+
+
