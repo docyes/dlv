@@ -108,7 +108,7 @@
         view.trigger('bar');
         ok(view.handler.calledOnce, 'listener called');
     });
-    test('undelegate listeners', 1, function() {
+    test('undelegate listener', 1, function() {
          var View = DLV.extend({
             listeners: {
                 'bar this': 'handler'
@@ -123,4 +123,24 @@
         model.set('foo', 'bar');
         ok(!view.handler.called, 'listener not called');
     });
+    test('undelegate anonymous listener', 1, function() {
+         var View = DLV.extend({
+            listeners: {
+                'bar this': function() {
+                    this.handler();        
+                }
+            },
+            handler: sinon.spy()
+        });
+        var model = new Backbone.Model();
+        var view = new View({
+            model: model
+        });
+        view.undelegateListeners();
+        model.set('foo', 'bar');
+        ok(!view.handler.called, 'listener not called');
+    });
+
+
+
 })();
