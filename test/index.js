@@ -79,4 +79,22 @@
         model.set('foo', 'bar');
         ok(view.handler.calledOnce, 'listener called');
     });
+    test('listeners declared in a function', 1, function() {
+        var View = DLV.extend({
+            listeners: function() {
+                return {
+                    'change model': function() {
+                        this.handler();
+                    }
+                };
+            },
+            handler: sinon.spy()
+        });
+        var model = new Backbone.Model();
+        var view = new View({
+            model: model
+        });
+        model.set('foo', 'bar');
+        ok(view.handler.calledOnce, 'listener called');
+    });
 })();
