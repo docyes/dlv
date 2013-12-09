@@ -1,4 +1,4 @@
-# Declarative Listener View (DLV) 
+# Declarative Listener View (DLV) ![alt text](https://api.travis-ci.org/docyes/dlv.png?branch=master "Build Status")
 
 A simple declarative syntax for binding/unbinding listeners to Backbone.View observables such as Model(s), Collection(s) and/or Oneself (this).
 
