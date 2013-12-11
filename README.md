@@ -7,7 +7,7 @@ A simple declarative syntax for binding/unbinding listeners to Backbone.View obs
 }
 ```
 
-## Model Listener
+## Object Attribute (Model, Collection, etc...) Listener
 ```js
 var View = new DLV.extend({
     listeners: {
@@ -22,7 +22,7 @@ var view = new View({model: model});
 model.set('foo', 'bar');
 ```
 
-## Associated Model Listener
+## Deep Object Attribute (Model, Collection, etc...) Listener
 ```js
 var View = new DLV.extend({
     listeners: {
@@ -38,7 +38,7 @@ var view = new View({model: model});
 model.associated.set('foo', 'bar');
 ```
 
-## View Listeners
+## this (View) Listeners
 ```js
 var View = new DLV.extend({
     listeners: {
