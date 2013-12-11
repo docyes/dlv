@@ -22,7 +22,7 @@ var DLV = Backbone.View.extend({
             var match = key.match(/\S+/g),
                 other,
                 others = match.pop().split('.');
-            for (var i = 0; i<others.length; i++) {
+            for (var i = 0; i < others.length; i++) {
                 if (i === 0) {
                     other = (others[i] === 'this') ? this : this[others[i]];
                 } else {
