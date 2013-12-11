@@ -22,6 +22,22 @@ var view = new View({model: model});
 model.set('foo', 'bar');
 ```
 
+## Associated Model Listener
+```js
+var View = new DLV.extend({
+    listeners: {
+        'change:foo model.associated': function() {
+            alert(this.model.get('foo'));
+        }
+    }
+});
+
+var model = new Backbone.Model();
+model.associated = new Backbone.Model();
+var view = new View({model: model});
+model.associated.set('foo', 'bar');
+```
+
 ## View Listeners
 ```js
 var View = new DLV.extend({
