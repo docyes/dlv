@@ -30,6 +30,21 @@
         model.set('foo', 'bar');
         ok(view.handler.calledOnce, 'listener called');
     });
+    test('deep object single event listener entry', 1, function() {
+        var View = DLV.extend({
+            listeners: {
+                'change model.associated': 'handler'
+            },
+            handler: sinon.spy()
+        });
+        var model = new Backbone.Model();
+        model.associated = new Backbone.Model();
+        var view = new View({
+            model: model
+        });
+        model.associated.set('foo', 'bar');
+        ok(view.handler.calledOnce, 'listener called');
+    });
     test('single multi-event listener entry', 1, function() {
         var View = DLV.extend({
             listeners: {
@@ -106,6 +121,20 @@
         });
         var view = new View();
         view.trigger('bar');
+        ok(view.handler.calledOnce, 'listener called');
+    });
+    test('deep local context event listener entry', 1, function() {
+        var View = DLV.extend({
+            initialize: function() {
+                this.nested = new Backbone.Model();
+            },
+            listeners: {
+                'bar this.nested': 'handler'
+            },
+            handler: sinon.spy()
+        });
+        var view = new View();
+        view.nested.trigger('bar');
         ok(view.handler.calledOnce, 'listener called');
     });
     test('undelegate listener', 1, function() {
