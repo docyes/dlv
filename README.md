@@ -38,7 +38,7 @@ var view = new View({model: model});
 model.associated.set('foo', 'bar');
 ```
 
-## this (View) Listeners
+## View (this) Listeners
 ```js
 var View = new DLV.extend({
     listeners: {
