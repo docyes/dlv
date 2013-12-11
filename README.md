@@ -3,7 +3,7 @@
 A simple declarative syntax for binding/unbinding listeners to Backbone.View observables such as Model(s), Collection(s) and/or Oneself (this).
 ```json
 {
-    'event (object|this)': (function|'name')
+    'event object|this': Function|'name')
 }
 ```
 
@@ -130,7 +130,7 @@ var view = new DLV({
 model.set('foo', 'bar');
 ```
 
-## Add Delegate Listeners By Reference
+## Add Listeners By Reference
 ```js
 var model = new Backbone.Model();
 var view = new DLV({
@@ -145,7 +145,7 @@ view.delegateListeners(listeners);
 model.set('foo', 'bar');
 ```
 
-## Remove Delegate Listeners By Reference
+## Remove Listeners By Reference
 ```js
 var model = new Backbone.Model();
 var view = new DLV({
