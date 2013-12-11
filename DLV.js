@@ -11,7 +11,7 @@ var DLV = Backbone.View.extend({
         if (!(listeners || (listeners = _.result(this, 'listeners')))) {
             return;
         }
-        for (var key in listeners) {
+        nextListener: for (var key in listeners) {
             var method = listeners[key];
             if (!_.isFunction(method)) {
                 method = this[listeners[key]];
@@ -19,11 +19,18 @@ var DLV = Backbone.View.extend({
             if (!method) {
                 continue;
             }
-            var match = key.match(/\S+/g);
-            var other = match.pop();
-            other = (other === 'this') ? this : this[other];
-            if (!other) {
-                continue;
+            var match = key.match(/\S+/g),
+                other,
+                others = match.pop().split('.');
+            for (var i = 0; i<others.length; i++) {
+                if (i === 0) {
+                    other = (others[i] === 'this') ? this : this[others[i]]
+                } else {
+                    other = other[others[i]];
+                }
+                if (!other) {
+                    continue nextListener;
+                }
             }
             this[implementation](other, match.join(' '), method);
         }
