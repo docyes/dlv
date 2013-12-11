@@ -24,7 +24,7 @@ var DLV = Backbone.View.extend({
                 others = match.pop().split('.');
             for (var i = 0; i<others.length; i++) {
                 if (i === 0) {
-                    other = (others[i] === 'this') ? this : this[others[i]]
+                    other = (others[i] === 'this') ? this : this[others[i]];
                 } else {
                     other = other[others[i]];
                 }
