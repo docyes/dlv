@@ -16,7 +16,7 @@
             });
         strictEqual(dlv.listeners, listeners, 'constructor instance listeners');    
     });
-    test('single event listener entry', 1, function() {
+    test('single event listener', 1, function() {
         var View = DLV.extend({
             listeners: {
                 'change model': 'handler'
@@ -30,7 +30,7 @@
         model.set('foo', 'bar');
         ok(view.handler.calledOnce, 'listener called');
     });
-    test('deep object single event listener entry', 1, function() {
+    test('deep object single event listener', 1, function() {
         var View = DLV.extend({
             listeners: {
                 'change model.associated': 'handler'
@@ -45,7 +45,7 @@
         model.associated.set('foo', 'bar');
         ok(view.handler.calledOnce, 'listener called');
     });
-    test('single multi-event listener entry', 1, function() {
+    test('single multi-event listener', 1, function() {
         var View = DLV.extend({
             listeners: {
                 'change:foo change:bar model': 'handler'
@@ -60,7 +60,7 @@
         model.set('bar', 'foo');
         ok(view.handler.calledTwice, 'listener called');
     });
-    test('many event listener entries', 2, function() {
+    test('many event listeners', 2, function() {
         var View = DLV.extend({
             listeners: {
                 'change:foo model': 'fooHandler',
@@ -112,7 +112,7 @@
         model.set('foo', 'bar');
         ok(view.handler.calledOnce, 'listener called');
     });
-    test('local context event listener entry', 1, function() {
+    test('local context event listener', 1, function() {
         var View = DLV.extend({
             listeners: {
                 'bar this': 'handler'
@@ -123,7 +123,7 @@
         view.trigger('bar');
         ok(view.handler.calledOnce, 'listener called');
     });
-    test('deep local context event listener entry', 1, function() {
+    test('deep local context event listener', 1, function() {
         var View = DLV.extend({
             initialize: function() {
                 this.nested = new Backbone.Model();
@@ -204,7 +204,7 @@
         model.set('bar', 'foo');
         ok(!view.handler.called, 'listener called');
     });
-    test('undelegate custom listeners does not clobber pre-existing', 1, function() {
+    test('undelegate custom listeners not clobber pre-existing', 1, function() {
         var View = DLV.extend({
             listeners: {
                 'change:foo model': 'fooHandler'
