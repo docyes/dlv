@@ -3,7 +3,7 @@
 A simple declarative syntax for binding/unbinding listeners to Backbone.View observables such as Model(s), Collection(s) and/or Oneself (this).
 ```json
 {
-    'event object|this': Function|'name')
+    'event object': Function|'name')
 }
 ```
 
