@@ -10,11 +10,10 @@ var DLV = Backbone.View.extend({
         Backbone.View.apply(this, arguments);
         this.delegateListeners();
     },
-    _implementListeners: function(listeners, implementation, options) {
+    _implementListeners: function(listeners, implementation) {
         if (!(listeners || (listeners = _.result(this, 'listeners')))) {
             return;
         }
-        options || (options = {});
         nextListener: for (var key in listeners) {
             var method = listeners[key];
             if (!_.isFunction(method)) {
