@@ -4,13 +4,17 @@ var DLV = Backbone.View.extend({
         if (options.listeners) {
             this.listeners = options.listeners;
         }
+        if (options.reverseListeners) {
+            this.reverseListeners = options.reverseListeners;
+        }
         Backbone.View.apply(this, arguments);
         this.delegateListeners();
     },
-    _implementListeners: function(listeners, implementation) {
+    _implementListeners: function(listeners, implementation, options) {
         if (!(listeners || (listeners = _.result(this, 'listeners')))) {
             return;
         }
+        options || (options = {});
         nextListener: for (var key in listeners) {
             var method = listeners[key];
             if (!_.isFunction(method)) {
@@ -21,7 +25,7 @@ var DLV = Backbone.View.extend({
             }
             var match = key.match(/\S+/g),
                 other,
-                others = match.pop().split('.');
+                others = match[this.reverseListeners ? 'shift' : 'pop']().split('.');
             for (var i = 0; i < others.length; i++) {
                 if (i === 0) {
                     other = (others[i] === 'this') ? this : this[others[i]];

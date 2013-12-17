@@ -22,6 +22,23 @@ var view = new View({model: model});
 model.set('foo', 'bar');
 ```
 
+## Reverse Listener Declaration Order
+```js
+var View = new DLV.extend({
+    listeners: {
+        'model change:foo': function() {
+            alert(this.model.get('foo'));
+        }
+    },
+    reverseListeners: true
+});
+
+var model = new Backbone.Model();
+var view = new View({model: model});
+model.set('foo', 'bar');
+```
+
+
 ## Deep Object Attribute (Model, Collection, etc...) Listener
 ```js
 var View = new DLV.extend({

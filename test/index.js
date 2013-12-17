@@ -5,9 +5,10 @@
         teardown: function() {
         }
     });
-    test('initialize with nothing', 1, function() {
+    test('initialize with nothing', 2, function() {
         var dlv = new DLV();
-        ok(!dlv.listeners, 'no constructor instance listeners');    
+        ok(!dlv.listeners, 'no constructor instance listeners');
+        ok(!dlv.reverseListeners, 'no constructor instance reverseListeners');
     });
     test('initialize with listeners', 1, function() {
         var listeners = {};
@@ -16,12 +17,35 @@
             });
         strictEqual(dlv.listeners, listeners, 'constructor instance listeners');    
     });
+    
+    test('initialize with listenerReverse', 1, function() {
+        var listeners = {};
+        var dlv = new DLV({
+                reverseListeners: true
+            });
+        ok(dlv.reverseListeners, 'constructor instance listenerReverse');    
+    });
     test('single event listener', 1, function() {
         var View = DLV.extend({
             listeners: {
                 'change model': 'handler'
             },
             handler: sinon.spy()
+        });
+        var model = new Backbone.Model();
+        var view = new View({
+            model: model
+        });
+        model.set('foo', 'bar');
+        ok(view.handler.calledOnce, 'listener called');
+    });
+    test('single event listener listener reversed', 1, function() {
+        var View = DLV.extend({
+            listeners: {
+                'model change': 'handler'
+            },
+            handler: sinon.spy(),
+            reverseListeners: true
         });
         var model = new Backbone.Model();
         var view = new View({
@@ -45,11 +69,44 @@
         model.associated.set('foo', 'bar');
         ok(view.handler.calledOnce, 'listener called');
     });
+    test('deep object single event listener reversed', 1, function() {
+        var View = DLV.extend({
+            listeners: {
+                'model.associated change': 'handler'
+            },
+            reverseListeners: true,
+            handler: sinon.spy()
+        });
+        var model = new Backbone.Model();
+        model.associated = new Backbone.Model();
+        var view = new View({
+            model: model
+        });
+        model.associated.set('foo', 'bar');
+        ok(view.handler.calledOnce, 'listener called');
+    });
+
     test('single multi-event listener', 1, function() {
         var View = DLV.extend({
             listeners: {
                 'change:foo change:bar model': 'handler'
             },
+            handler: sinon.spy()
+        });
+        var model = new Backbone.Model();
+        var view = new View({
+            model: model
+        });
+        model.set('foo', 'bar');
+        model.set('bar', 'foo');
+        ok(view.handler.calledTwice, 'listener called');
+    });
+    test('single multi-event listener reversed', 1, function() {
+        var View = DLV.extend({
+            listeners: {
+                'model change:foo change:bar': 'handler'
+            },
+            reverseListeners: true,
             handler: sinon.spy()
         });
         var model = new Backbone.Model();
@@ -78,6 +135,25 @@
         ok(view.fooHandler.calledOnce, 'foo listener called');
         ok(view.barHandler.calledOnce, 'bar listener called');
     });
+    test('many event listeners reversed', 2, function() {
+        var View = DLV.extend({
+            listeners: {
+                'model change:foo': 'fooHandler',
+                'model change:bar': 'barHandler'
+            },
+            reverseListeners: true,
+            fooHandler: sinon.spy(),
+            barHandler: sinon.spy()
+        });
+        var model = new Backbone.Model();
+        var view = new View({
+            model: model
+        });
+        model.set('foo', 'foo');
+        model.set('bar', 'bar');
+        ok(view.fooHandler.calledOnce, 'foo listener called');
+        ok(view.barHandler.calledOnce, 'bar listener called');
+    });
     test('anonymous event listener', 1, function() {
         var View = DLV.extend({
             listeners: {
@@ -85,6 +161,23 @@
                     this.handler();
                 }
             },
+            handler: sinon.spy()
+        });
+        var model = new Backbone.Model();
+        var view = new View({
+            model: model
+        });
+        model.set('foo', 'bar');
+        ok(view.handler.calledOnce, 'listener called');
+    });
+    test('anonymous event listener reversed', 1, function() {
+        var View = DLV.extend({
+            listeners: {
+                'model change': function() {
+                    this.handler();
+                }
+            },
+            reverseListeners: true,
             handler: sinon.spy()
         });
         var model = new Backbone.Model();
@@ -112,11 +205,42 @@
         model.set('foo', 'bar');
         ok(view.handler.calledOnce, 'listener called');
     });
+    test('listeners declared in a function reversed', 1, function() {
+        var View = DLV.extend({
+            listeners: function() {
+                return {
+                    'model change': function() {
+                        this.handler();
+                    }
+                };
+            },
+            reverseListeners: true,
+            handler: sinon.spy()
+        });
+        var model = new Backbone.Model();
+        var view = new View({
+            model: model
+        });
+        model.set('foo', 'bar');
+        ok(view.handler.calledOnce, 'listener called');
+    });
     test('local context event listener', 1, function() {
         var View = DLV.extend({
             listeners: {
                 'bar this': 'handler'
             },
+            handler: sinon.spy()
+        });
+        var view = new View();
+        view.trigger('bar');
+        ok(view.handler.calledOnce, 'listener called');
+    });
+    test('local context event listener reversed', 1, function() {
+        var View = DLV.extend({
+            listeners: {
+                'this bar': 'handler'
+            },
+            reverseListeners: true,
             handler: sinon.spy()
         });
         var view = new View();
@@ -131,6 +255,21 @@
             listeners: {
                 'bar this.nested': 'handler'
             },
+            handler: sinon.spy()
+        });
+        var view = new View();
+        view.nested.trigger('bar');
+        ok(view.handler.calledOnce, 'listener called');
+    });
+    test('deep local context event listener reversed', 1, function() {
+        var View = DLV.extend({
+            initialize: function() {
+                this.nested = new Backbone.Model();
+            },
+            listeners: {
+                'this.nested bar': 'handler'
+            },
+            reverseListeners: true,
             handler: sinon.spy()
         });
         var view = new View();
@@ -152,6 +291,22 @@
         model.set('bar', 'foo');
         ok(!view.handler.called, 'listener not called');
     });
+    test('undelegate listener reversed', 1, function() {
+        var View = DLV.extend({
+           listeners: {
+               'change:bar model': 'handler'
+           },
+           reverseListeners: true,
+           handler: sinon.spy()
+       });
+       var model = new Backbone.Model();
+       var view = new View({
+           model: model
+       });
+       view.undelegateListeners();
+       model.set('bar', 'foo');
+       ok(!view.handler.called, 'listener not called');
+    });
     test('undelegate anonymous listener', 1, function() {
          var View = DLV.extend({
             listeners: {
@@ -169,6 +324,24 @@
         model.set('bar', 'foo');
         ok(!view.handler.called, 'listener not called');
     });
+    test('undelegate anonymous listener reversed', 1, function() {
+        var View = DLV.extend({
+           listeners: {
+               'model change:bar': function() {
+                   this.handler();        
+               }
+           },
+           reverseListeners: true,
+           handler: sinon.spy()
+       });
+       var model = new Backbone.Model();
+       var view = new View({
+           model: model
+       });
+       view.undelegateListeners();
+       model.set('bar', 'foo');
+       ok(!view.handler.called, 'listener not called');
+    });
     test('delegate custom listeners', 1, function() {
         var View = DLV.extend({
             handler: sinon.spy()
@@ -179,6 +352,24 @@
         });
         var listeners = {
             'change:bar model': function() {
+                this.handler();        
+            }
+        };
+        view.delegateListeners(listeners);
+        model.set('bar', 'foo');
+        ok(view.handler.called, 'listener called');
+    });
+    test('delegate custom listeners reversed', 1, function() {
+        var View = DLV.extend({
+            reverseListeners: true,
+            handler: sinon.spy()
+        });
+        var model = new Backbone.Model();
+        var view = new View({
+            model: model
+        });
+        var listeners = {
+            'model change:bar': function() {
                 this.handler();        
             }
         };
@@ -204,6 +395,25 @@
         model.set('bar', 'foo');
         ok(!view.handler.called, 'listener called');
     });
+    test('undelegate custom listeners', 1, function() {
+        var View = DLV.extend({
+            reverseListeners: true,
+            handler: sinon.spy()
+        });
+        var model = new Backbone.Model();
+        var view = new View({
+            model: model
+        });
+        var listeners = {
+            'model change:bar': function() {
+                this.handler();        
+            }
+        };
+        view.delegateListeners(listeners);
+        view.undelegateListeners(listeners);
+        model.set('bar', 'foo');
+        ok(!view.handler.called, 'listener called');
+    });
     test('undelegate custom listeners not clobber pre-existing', 1, function() {
         var View = DLV.extend({
             listeners: {
@@ -218,6 +428,27 @@
         });
         var listeners = {
             'change:bar model': function() {}
+        };
+        view.delegateListeners(listeners);
+        view.undelegateListeners(listeners);
+        model.set('foo', 'bar');
+        ok(view.fooHandler.called, 'listener called');
+    });
+    test('undelegate custom listeners not clobber pre-existing reversed', 1, function() {
+        var View = DLV.extend({
+            listeners: {
+                'model change:foo': 'fooHandler'
+            },
+            reverseListeners: true,
+            fooHandler: sinon.spy(),
+            barHandler: sinon.spy()
+        });
+        var model = new Backbone.Model();
+        var view = new View({
+            model: model
+        });
+        var listeners = {
+            'model change:bar': function() {}
         };
         view.delegateListeners(listeners);
         view.undelegateListeners(listeners);
